@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>اختبارات — مفهوم الشخصية في الإسلام</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#f6fff5;--card:#053927;--accent:#8fd3a6;--accent2:#ffd166;--text:#03322a}
+    *{box-sizing:border-box}
+    body{font-family:'Cairo',sans-serif;margin:0;background:linear-gradient(180deg,#eafaf0,#f6fff5);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .app{width:100%;max-width:960px;background:#fff;border-radius:14px;box-shadow:0 10px 30px rgba(3,50,42,0.12);overflow:hidden}
+    header{background:linear-gradient(90deg,var(--card),#0a4f33);color:#fff;padding:18px 22px;display:flex;justify-content:space-between;align-items:center}
+    header h1{margin:0;font-size:20px}
+    header p{margin:0;opacity:.9;font-size:13px}
+    main{padding:24px}
+    .meta{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    .progress{font-weight:700}
+    .card{background:linear-gradient(180deg,#ffffff,#f7fff8);border:1px solid rgba(3,50,42,0.06);padding:18px;border-radius:12px;margin-top:18px}
+    .question{font-size:20px;margin:0 0 12px 0}
+    .options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .opt{padding:12px;border-radius:10px;border:2px solid rgba(3,50,42,0.08);cursor:pointer;font-weight:700;background:#fff;transition:all .25s;min-height:56px;display:flex;align-items:center;justify-content:center}
+    .opt:hover{transform:translateY(-3px)}
+
+    /* حالات الخطأ والصواب */
+    .flash-correct .opt{background:linear-gradient(90deg,#e6fff0,#d6ffea);border-color:#78d89f}
+    .flash-correct .opt.correct{background:#dff7e7;border-color:#2fa76b}
+    .flash-wrong{animation:shake .28s}
+    .flash-wrong .opt{background:linear-gradient(90deg,#fff0f0,#ffecec);border-color:#f2a6a6}
+    @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+
+    .controls{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+    .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:800}
+    .btn.primary{background:var(--accent);color:var(--card)}
+    .btn.ghost{background:transparent;border:1px solid rgba(3,50,42,0.08)}
+    footer{padding:12px 20px;background:#f3fff7;text-align:center;font-size:13px;color:#175b44}
+
+    /* موبايل */
+    @media(max-width:640px){.options{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="app" role="application">
+    <header>
+      <div>
+        <h1>اختبار — مفهوم الشخصية وأبعادها</h1>
+      </div>
+      <div style="text-align:left">
+        <small id="scoreText">الدرجة: 0</small>
+      </div>
+    </header>
+
+    <main>
+      <div class="meta">
+        <div class="progress">السؤال <span id="qIndex">1</span> / <span id="qTotal">1</span></div>
+        <div id="hint" style="opacity:.9;font-size:14px"></div>
+      </div>
+
+      <div class="card" id="card">
+        <h2 class="question" id="question">...</h2>
+        <div class="options" id="options"></div>
+
+        <div class="controls">
+          <button class="btn ghost" id="prevBtn">السابق</button>
+          <button class="btn primary" id="nextBtn">تخطي (بعد الإجابة الصحيحة)</button>
+        </div>
+      </div>
+
+    </main>
+
+    <footer>
+      <div style="margin-top:6px"><button class="btn primary" id="restart">بداية جديدة</button></div>
+    </footer>
+  </div>
+
+  <script>
+    // قاعدة الأسئلة مأخوذة من المحتوى الذي زوَّدتني به
+    const questions = [
+      {
+        q: 'ما المقصود بـ "مفهوم الشخصية في الإسلام"؟',
+        opts: [
+          'مجموعة من الصفات الفردية فقط',
+          'بناء متكامل يشمل الإيمان، الأخلاق، التفكير، الجسد، والعلاقات',
+          'مجموعة قوانينً اجتماعية فقط',
+          'مظهر خارجي للشخص'
+        ],
+        a: 1
+      },
+      {
+        q: 'في تعريف الشخصية ذُكر أنها تُبنى على أي مما يلي؟',
+        opts: ['المال والجاه', 'الإيمان بالله والتزكية والالتزام بالحق', 'الشهرة', 'القوة الجسدية'],
+        a: 1
+      },
+      {
+        q: 'أي آية تربط النجاح بتزكية النفس؟',
+        opts: ['{قَدْ أَفْلَحَ مَن زَكَّاهَا} — الشمس: 9', '{قَدْ أَفْلَحَ الْمُؤْمِنُونَ} — المؤمنون: 1', '{وَمَا خَلَقْتُ الْجِنَّ} — الذاريات: 56', '{إِنَّ أَكْرَمَكُمْ} — الحجرات: 13'],
+        a: 0
+      },
+      {
+        q: 'ما هو البعد الإيماني من أبعاد الشخصية؟',
+        opts: ['صلة العبد بربه وعبادته', 'القدرة البدنية فقط', 'العلاقات الاجتماعية فقط', 'المستوى المادي'],
+        a: 0
+      },
+      {
+        q: 'أي آية وردت في قسم البعد الإيماني في العرض؟',
+        opts: ['{قَدْ أَفْلَحَ الْمُؤْمِنُونَ} — المؤمنون: 1', '{قَدْ أَفْلَحَ مَن زَكَّاهَا} — الشمس: 9', '{وَإِنَّكَ لَعَلَى خُلُقٍ عَظِيمٍ} — القلم: 4', '{إِنَّ أَكْرَمَكُمْ} — الحجرات: 13'],
+        a: 0
+      },
+      {
+        q: 'ما معنى الآية {وَإِنَّكَ لَعَلَى خُلُقٍ عَظِيمٍ} في سياق العرض؟',
+        opts: ['تشير إلى أهمية الأخلاق كأساس للمجتمع والفرد', 'تتكلم عن الجهاد', 'تتحدث عن الاقتصاد', 'تخص العلماء فقط'],
+        a: 0
+      },
+      {
+        q: 'أي من التالي يُصنّف كبعد عقلي؟',
+        opts: ['العبادة فقط', 'الصحة البدنية فقط','طلب العلم واستخدام العقل ','التطوع فقط'],
+        a: 2
+      },
+      {
+        q: 'ما الحديث الذي ذُكر في الغلاف؟',
+        opts: [
+            '«طلب العلم فريضة على كل مسلم»',
+            '«المؤمن القوي خير وأحب إلى الله من المؤمن الضعيف»',
+            '«الإيمان بضع وسبعون شعبة... وأدناها إماطة الأذى عن الطريق.» — رواه مسلم',
+          'لا حديث ذُكر'
+        ],
+        a: 2
+      },
+      {
+        q: 'أي عبارة تمثل البعد الاجتماعي كما ورد؟',
+        opts: [
+          'الصحة والتعاون مع الآخرين',
+          'العبادة الفردية فقط',
+          'الثراء المالي',
+          'القدوة فقط'
+        ],
+        a: 0
+      },
+      {
+        q: 'ما الآية الختامية في العرض؟',
+        opts: [
+            '{قَدْ أَفْلَحَ الْمُؤْمِنُونَ} — المؤمنون: 1',
+            '{وَمَا خَلَقْتُ الْجِنَّ} — الذاريات: 56',
+            '{وَإِنَّكَ لَعَلَى خُلُقٍ عَظِيمٍ} — القلم: 4',
+            '{إِنَّ أَكْرَمَكُمْ عِندَ اللَّهِ أَتْقَاكُمْ} — الحجرات: 13'
+        ],
+        a: 3
+          }
+    ];
+
+    // عناصر DOM
+    const qIndexEl = document.getElementById('qIndex');
+    const qTotalEl = document.getElementById('qTotal');
+    const questionEl = document.getElementById('question');
+    const optionsEl = document.getElementById('options');
+    const card = document.getElementById('card');
+    const scoreText = document.getElementById('scoreText');
+
+    let current = 0;
+    let score = 0;
+
+    qTotalEl.textContent = questions.length;
+
+    function renderQuestion(i){
+      const item = questions[i];
+      qIndexEl.textContent = i+1;
+      questionEl.textContent = item.q;
+      optionsEl.innerHTML = '';
+      item.opts.forEach((opt, idx)=>{
+        const b = document.createElement('button');
+        b.className = 'opt';
+        b.setAttribute('data-idx', idx);
+        b.innerText = opt;
+        b.addEventListener('click', ()=> handleAnswer(idx));
+        optionsEl.appendChild(b);
+      });
+      // إزالة أي تأثيرات سابقة
+      card.classList.remove('flash-correct','flash-wrong');
+    }
+
+    function handleAnswer(selected){
+      const correct = questions[current].a;
+      if(selected === correct){
+        // علامة صح: كل الشاشة خضراء وتنتقل للسؤال التالي بعد تأخير
+        card.classList.add('flash-correct');
+        // تمييز الزر الصحيح لو أردنا
+        const btns = [...optionsEl.children];
+        btns.forEach((bt, i)=>{ if(i===correct) bt.classList.add('correct'); });
+        score += 1;
+        scoreText.textContent = 'الدرجة: ' + score;
+        // ننتقل للسؤال التالي بعد 900ms
+        setTimeout(()=>{
+          current = Math.min(current+1, questions.length-1);
+          if(current < questions.length) renderQuestion(current);
+        },900);
+      } else {
+        // خاطئ: وميض أحمر ثم السماح بإعادة المحاولة
+        card.classList.add('flash-wrong');
+        // نبقي المستخدم يعيد الإجابة — نزيل الوميض بعد 700ms
+        setTimeout(()=> card.classList.remove('flash-wrong'),700);
+      }
+    }
+
+    // أزرار التحكم
+    document.getElementById('prevBtn').addEventListener('click', ()=>{
+      current = Math.max(0, current-1);
+      renderQuestion(current);
+    });
+    document.getElementById('nextBtn').addEventListener('click', ()=>{
+      // يسمح بالتخطي فقط إن وصلت للإجابة الصحيحة (تعني أننا في السؤال التالي أصلاً)
+      current = Math.min(questions.length-1, current+1);
+      renderQuestion(current);
+    });
+    document.getElementById('restart').addEventListener('click', ()=>{
+      current = 0; score = 0; scoreText.textContent = 'الدرجة: 0'; renderQuestion(current);
+    });
+
+    // بدء العرض
+    renderQuestion(0);
+  </script>
+</body>
+</html>

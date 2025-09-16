@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>مفهوم الشخصية وأبعادها — عرض إسلامي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Amiri&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1: #041f15; --bg2:#063726; 
+      --card:#072b22; --accent:#8fd3a6; --accent2:#ffd166; --muted:#e9f8ef;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Cairo',sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:var(--muted);overflow-x:hidden}
+
+    /* زخارف خلفية */
+    body::before{
+      content:"";position:fixed;inset:0;
+      background:url('https://www.transparenttextures.com/patterns/arabesque.png');
+      opacity:.06;pointer-events:none;
+    }
+
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+    .presentation{width:100%;max-width:1250px;background:rgba(255,255,255,0.03);
+      border-radius:20px;padding:20px;box-shadow:0 18px 50px rgba(0,0,0,0.6);position:relative;overflow:hidden}
+
+    /* العنوان */
+    header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:72px;height:72px;border-radius:50%;background:radial-gradient(circle,var(--accent2),var(--accent));
+      display:grid;place-items:center;color:#07321f;font-weight:900;font-size:30px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.5);font-family:"Amiri",serif}
+    h1{margin:0;font-size:26px;color:var(--accent2)}
+    header p{margin:0;opacity:0.9;font-size:14px}
+
+    /* المنصة */
+    .stage{display:grid;grid-template-columns:280px 1fr;gap:18px;padding:18px}
+    .nav{background:rgba(255,255,255,0.02);padding:14px;border-radius:14px;min-height:540px}
+    .nav ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px}
+    .nav li{padding:10px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .25s;font-weight:600}
+    .nav li:hover{transform:translateX(-6px);background:rgba(255,255,255,0.05)}
+    .nav li.active{background:linear-gradient(90deg, rgba(143,211,166,0.08), rgba(255,209,102,0.05));box-shadow:inset 0 0 0 1px rgba(255,255,255,0.1)}
+    .num{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.07);display:grid;place-items:center;font-size:14px}
+
+    .canvas{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      padding:22px;border-radius:14px;min-height:540px;position:relative;overflow:hidden}
+
+    .slide{position:absolute;inset:20px;border-radius:12px;padding:26px;display:none;background:rgba(0,0,0,0.05);backdrop-filter:blur(3px);animation:fadeZoom .8s ease both}
+    .slide.active{display:block}
+
+    @keyframes fadeZoom{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+
+    h2{font-size:32px;margin:0 0 8px 0;color:var(--accent2);font-family:"Amiri",serif}
+    .ayat{font-size:20px;color:#fff8e6;background:rgba(0,0,0,0.25);padding:12px;border-radius:12px;margin:14px 0;border-right:4px solid var(--accent2);font-family:"Amiri",serif;line-height:1.8}
+    blockquote.hadith{font-size:18px;padding:12px;border-radius:10px;background:rgba(255,255,255,0.07);margin:14px 0;border-right:4px solid var(--accent);line-height:1.8;font-family:"Amiri",serif}
+
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+    .card{background:rgba(255,255,255,0.04);padding:16px;border-radius:12px;min-height:110px;position:relative}
+
+    /* الأزرار */
+    .controls{display:flex;gap:12px;justify-content:flex-end;margin-top:16px}
+    .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700;font-size:14px}
+    .btn.primary{background:var(--accent);color:#07321f}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.2);color:var(--muted)}
+
+    /* تذييل */
+    footer{padding:14px;text-align:center;opacity:0.8;font-size:13px}
+
+    /* عداد الوقت */
+    #timer{position:absolute;bottom:14px;left:18px;font-size:13px;opacity:.7}
+
+    @media(max-width:900px){
+      .stage{grid-template-columns:1fr}
+      .nav{order:2}
+      .canvas{order:1}
+    }
+     /* زر ملء الشاشة */
+    #fullscreenBtn{
+      padding:8px 14px;
+      border:none;
+      border-radius:8px;
+      background:var(--accent2);
+      color:#07321f;
+      font-weight:700;
+      cursor:pointer;
+      margin-left:10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="presentation" role="application">
+      <header>
+        <div class="brand">
+          <div class="logo">﷽</div>
+          <div>
+            <h1>مفهوم الشخصية وأبعادها</h1>
+          </div>
+        </div>
+        <div style="text-align:left">
+           <button id="fullscreenBtn">⛶ ملء الشاشة</button>
+          <small>المُقدّم: آدم • التاريخ: <span id="date"></span></small>
+        </div>
+      </header>
+
+      <div class="stage">
+        <nav class="nav">
+          <ul id="toc">
+            <li data-i="0" class="active"><span class="num">1</span><strong>الغلاف</strong></li>
+            <li data-i="1"><span class="num">2</span><strong>مقدمة</strong></li>
+            <li data-i="2"><span class="num">3</span><strong>تعريف الشخصية</strong></li>
+            <li data-i="3"><span class="num">4</span><strong>أبعاد الشخصية</strong></li>
+            <li data-i="4"><span class="num">5</span><strong>البعد الإيماني</strong></li>
+            <li data-i="5"><span class="num">6</span><strong>البعد الأخلاقي</strong></li>
+            <li data-i="6"><span class="num">7</span><strong>البعد العقلي والجسدي والاجتماعي</strong></li>
+            <li data-i="7"><span class="num">8</span><strong>الخاتمة</strong></li>
+            <li data-i="8"><span class="num">9</span><strong>أسئلة للمناقشة</strong></li>
+          </ul>
+          <div class="controls">
+            <button class="btn ghost" id="prev">السابق</button>
+            <button class="btn primary" id="next">التالي</button>
+          </div>
+        </nav>
+
+        <main class="canvas" id="canvas">
+
+          <section class="slide active" data-index="0">
+            <h2>بِسْمِ اللهِ الرَّحْمَنِ الرَّحِيمِ</h2>
+            <div class="ayat">مفهوم الشخصية وأبعادها</div>
+              <div class="grid">
+              <div class="card">
+                <h3>حديث شريف</h3>
+                <blockquote class="hadith">«الإيمان بضع وسبعون شعبة، أعلاها قول لا إله إلا الله، وأدناها إماطة الأذى عن الطريق.» — <small>رواه مسلم</small></blockquote>
+              </div>
+            </div>
+          </section>
+
+          <section class="slide" data-index="1">
+            <h2>مقدمة</h2>
+            <p>الشخصية في الإسلام ليست مجرد صفات فردية، بل هي بناء متكامل يشمل الإيمان، الأخلاق، التفكير، الجسد، والعلاقات مع الناس.</p>
+          </section>
+
+          <section class="slide" data-index="2">
+            <h2>تعريف الشخصية</h2>
+            <p>هي مجموعة من الصفات والقيم التي تحدد هوية الإنسان وتميزه.  
+              في الإسلام، تُبنى على الإيمان بالله، التزكية، والالتزام بالحق.</p>
+            <div class="card">
+              <h3>آية</h3>
+              <div class="ayat">{قَدْ أَفْلَحَ مَن زَكَّاهَا} — <small>الشمس: 9</small></div>
+            </div>
+          </section>
+
+          <section class="slide" data-index="3">
+            <h2>الأبعاد الأساسية للشخصية</h2>
+            <div class="grid">
+              <div class="card"><h3>الإيماني</h3><p>صلة العبد بربه وعبادته.</p></div>
+              <div class="card"><h3>الأخلاقي</h3><p>السلوك الحسن والقدوة.</p></div>
+              <div class="card"><h3>العقلي</h3><p>طلب العلم واستخدام العقل.</p></div>
+              <div class="card"><h3>الجسدي والاجتماعي</h3><p>الصحة والتعاون مع الآخرين.</p></div>
+            </div>
+          </section>
+
+          <section class="slide" data-index="4">
+            <h2>البعد الإيماني</h2>
+            <p>الإيمان والعبادة هما المحور الأساسي للشخصية الإسلامية.</p>
+            <div class="ayat">{قَدْ أَفْلَحَ الْمُؤْمِنُونَ} — <small>المؤمنون: 1</small></div>
+          </section>
+
+          <section class="slide" data-index="5">
+            <h2>البعد الأخلاقي</h2>
+            <p>الأخلاق أساس بناء المجتمع والفرد.</p>
+            <div class="ayat">{وَإِنَّكَ لَعَلَى خُلُقٍ عَظِيمٍ} — <small>القلم: 4</small></div>
+          </section>
+
+          <section class="slide" data-index="6">
+            <h2>البعد العقلي والجسدي والاجتماعي</h2>
+            <div class="grid">
+              <div class="card"><h3>العقلي</h3><p>«طلب العلم فريضة على كل مسلم»</p></div>
+              <div class="card"><h3>الجسدي</h3><p>«المؤمن القوي خير وأحب إلى الله من المؤمن الضعيف»</p></div>
+              <div class="card"><h3>الاجتماعي</h3><p>{وتعاونوا على البر والتقوى ولا تعاونوا على الإثم والعدوان}</p></div>
+            </div>
+          </section>
+
+          
+          <section class="slide" data-index="8">
+            <h2>الخاتمة</h2>
+            <div class="ayat">{إِنَّ أَكْرَمَكُمْ عِندَ اللَّهِ أَتْقَاكُمْ} — <small>الحجرات: 13</small></div>
+          </section>
+          
+          <section class="slide" data-index="7">
+            <h2>أسئلة للمناقشة</h2>
+            <div class="controls" style="margin-top:20px; justify-content:center;">
+              <a href="quiz.html" class="btn primary">الانتقال إلى الاختبار</a>
+            </div>
+          </section>
+        </main>
+      </div>
+
+      <footer>
+        <div id="timer">00:00</div>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+        // زر ملء الشاشة
+    document.getElementById('fullscreenBtn').addEventListener('click',()=>{
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
+    document.getElementById('date').textContent = new Date().toLocaleDateString();
+    const slides = [...document.querySelectorAll('.slide')];
+    const toc = [...document.querySelectorAll('#toc li')];
+    const next = document.getElementById('next');
+    const prev = document.getElementById('prev');
+    let idx = 0;
+
+    function show(i){
+      slides.forEach(s=>s.classList.remove('active'));
+      toc.forEach(t=>t.classList.remove('active'));
+      slides[i].classList.add('active');
+      toc[i].classList.add('active');
+    }
+
+    toc.forEach((li,i)=>li.addEventListener('click',()=>{ idx=i; show(idx); }));
+    next.addEventListener('click',()=>{ idx = Math.min(idx+1,slides.length-1); show(idx); });
+    prev.addEventListener('click',()=>{ idx = Math.max(idx-1,0); show(idx); });
+
+    window.addEventListener('keydown',e=>{
+      if(e.key === 'ArrowLeft' || e.key === 'ArrowUp') { idx = Math.max(idx-1,0); show(idx); }
+      if(e.key === 'ArrowRight' || e.key === 'ArrowDown') { idx = Math.min(idx+1,slides.length-1); show(idx); }
+    });
+
+    // عداد الوقت
+    let seconds=0;
+    setInterval(()=>{
+      seconds++;
+      let m=Math.floor(seconds/60).toString().padStart(2,'0');
+      let s=(seconds%60).toString().padStart(2,'0');
+      document.getElementById('timer').textContent=`${m}:${s}`;
+    },1000);
+
+    show(0);
+  </script>
+</body>
+</html>
