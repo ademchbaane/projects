@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz – Cellule Eucaryote</title>
+  <style>
+    :root {
+      --bg: #0b1628;
+      --card: #132238;
+      --accent: #4ddfff;
+      --correct: #28a745;
+      --wrong: #dc3545;
+      --text: #eaf6ff;
+      --muted: #b9c6d6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Inter", sans-serif;
+      background: linear-gradient(180deg, #0b1628, #09121f);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .quiz-container {
+      width: min(95%, 800px);
+      background: var(--card);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      animation: fadeIn 0.8s ease;
+    }
+    @keyframes fadeIn { from{opacity:0; transform: translateY(20px);} to{opacity:1; transform:none;} }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--accent);
+    }
+    .question {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    .answers {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .answers button {
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+    .answers button:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-2px);
+    }
+    .answers button.correct { background: var(--correct); color: #fff; }
+    .answers button.wrong { background: var(--wrong); color: #fff; }
+    .next-btn {
+      padding: 12px 20px;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 16px;
+      color: #022;
+      display: none;
+    }
+    .score {
+      text-align: center;
+      font-size: 22px;
+      margin-top: 20px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz : Cellule Eucaryote</h1>
+    <div id="quiz">
+      <div class="question" id="question">Question</div>
+      <div class="answers" id="answers"></div>
+      <button class="next-btn" id="next">Suivant ▶</button>
+      <div class="score" id="score"></div>
+    </div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "Quelle est la taille typique d’une cellule eucaryote ?",
+        answers: ["0,1–1 µm", "1–5 µm", "10–100 µm", "1–10 mm"],
+        correct: 2
+      },
+      {
+        question: "Quel est le rôle principal de la membrane plasmique ?",
+        answers: [
+          "Produire de l’ATP",
+          "Perméabilité sélective et signalisation",
+          "Condensation de l’ADN",
+          "Synthèse des protéines"
+        ],
+        correct: 1
+      },
+      {
+        question: "Quelle structure fabrique les sous-unités ribosomales ?",
+        answers: ["Ribosomes libres", "Nucléole", "Golgi", "Centrosome"],
+        correct: 1
+      },
+      {
+        question: "Quel organite est responsable de la phosphorylation oxydative ?",
+        answers: ["Appareil de Golgi", "Mitochondrie", "Réticulum endoplasmique lisse", "Nucléole"],
+        correct: 1
+      },
+      {
+        question: "Quelle est la fonction principale du RE rugueux ?",
+        answers: [
+          "Synthèse des lipides",
+          "Détoxification",
+          "Synthèse des protéines sécrétées ou membranaires",
+          "Stockage du calcium"
+        ],
+        correct: 2
+      },
+      {
+        question: "Quelle modification post-traductionnelle est réalisée dans l’appareil de Golgi ?",
+        answers: ["Methylation de l’ADN", "Phosphorylation des protéines", "Glycosylation", "Réplication de l’ADN"],
+        correct: 2
+      },
+      {
+        question: "Quel est le rôle du centrosome ?",
+        answers: [
+          "Traduire l’ARNm",
+          "Organiser les microtubules et le fuseau mitotique",
+          "Synthétiser des lipides",
+          "Produire l’ARN"
+        ],
+        correct: 1
+      }
+    ];
+
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const nextBtn = document.getElementById("next");
+    const scoreEl = document.getElementById("score");
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = quizData[currentQuestion];
+      questionEl.textContent = q.question;
+      answersEl.innerHTML = "";
+      q.answers.forEach((answer, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = answer;
+        btn.addEventListener("click", () => selectAnswer(i, btn));
+        answersEl.appendChild(btn);
+      });
+      nextBtn.style.display = "none";
+    }
+
+    function selectAnswer(selected, btn) {
+      const q = quizData[currentQuestion];
+      const buttons = answersEl.querySelectorAll("button");
+      buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === q.correct) b.classList.add("correct");
+        if (i === selected && i !== q.correct) b.classList.add("wrong");
+      });
+      if (selected === q.correct) score++;
+      nextBtn.style.display = "inline-block";
+    }
+
+    nextBtn.addEventListener("click", () => {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        loadQuestion();
+      } else {
+        showScore();
+      }
+    });
+
+    function showScore() {
+      questionEl.style.display = "none";
+      answersEl.style.display = "none";
+      nextBtn.style.display = "none";
+      scoreEl.textContent = `Votre score : ${score} / ${quizData.length}`;
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>

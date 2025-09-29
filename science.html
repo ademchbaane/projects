@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ultrastructure de la cellule eucaryote — Présentation</title>
+  <style>
+    :root{
+      --bg-1: #071029; --bg-2: #07203a; --card:#071427; --accent:#6be3ff; --muted:#b9c6d6; --glass: rgba(255,255,255,0.04);
+      --maxw:1200px; --gap:22px;
+      color-scheme: dark;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; min-height:100vh; background:radial-gradient(1200px 600px at 10% 10%, rgba(107,227,255,0.04), transparent), linear-gradient(180deg,var(--bg-1),var(--bg-2)); color:#eaf6ff; display:flex; align-items:center; justify-content:center}
+    .wrap{width:min(96%,var(--maxw)); height:86vh; border-radius:14px; overflow:hidden; box-shadow:0 20px 60px rgba(2,6,23,0.7); display:grid; grid-template-columns:260px 1fr;}
+
+    /* SIDEBAR */
+    .sidebar{background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent); padding:20px; border-right:1px solid rgba(255,255,255,0.03); position:relative}
+    .logo{font-weight:800; font-size:15px; color:var(--accent); margin-bottom:8px}
+    .subtitle{font-size:12px; color:var(--muted); margin-bottom:18px}
+    .toc{list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:6px}
+    .toc button{background:transparent; border:none; color:var(--muted); text-align:left; padding:10px 12px; border-radius:8px; cursor:pointer}
+    .toc button.active{background:linear-gradient(90deg, rgba(107,227,255,0.06), rgba(255,255,255,0.02)); color:var(--accent); box-shadow:inset 0 0 0 1px rgba(107,227,255,0.04)}
+    .sidebar .meta{position:absolute; bottom:16px; left:20px; font-size:12px; color:var(--muted)}
+
+    /* SLIDES */
+    .slides{position:relative; padding:28px 28px 52px 28px}
+    .slide{position:absolute; inset:0; display:grid; grid-template-columns: 1fr 420px; gap:var(--gap); align-items:start; padding:30px; opacity:0; transform:translateX(20px) scale(0.995); transition:all .45s cubic-bezier(.2,.9,.2,1); pointer-events:none}
+    .slide.active{opacity:1; transform:none; pointer-events:auto}
+
+    /* Left column (text) */
+    .content{padding:6px 12px}
+    h1{font-size:28px; margin:0 0 8px; color:#fff}
+    h2{font-size:20px; margin:0 0 12px; color:var(--accent)}
+    p{color:var(--muted); line-height:1.6; margin:0 0 12px}
+    ul{color:var(--muted); margin:8px 0 12px}
+    li{margin-bottom:6px}
+    .fact{display:inline-block; background:rgba(255,255,255,0.02); padding:6px 10px; border-radius:10px; color:var(--muted); font-size:13px}
+
+    /* Right column (visual) */
+    .visual{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:14px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(2,8,20,0.6)}
+    .visual img{max-width:100%; height:300px; object-fit:cover; border-radius:10px; transform:translateY(14px) scale(.98); transition:transform .6s cubic-bezier(.2,.9,.2,1), filter .4s}
+    .visual img.show{transform:none; filter:drop-shadow(0 12px 40px rgba(0,0,0,0.6));}
+    .caption{font-size:13px; color:var(--muted); margin-top:10px}
+
+    /* controls and progress */
+    .controls{position:absolute; left:50%; transform:translateX(-50%); bottom:14px; width:70%; display:flex; align-items:center; gap:12px}
+    .progress{flex:1; height:8px; background:rgba(255,255,255,0.04); border-radius:999px; overflow:hidden}
+    .progress > i{display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--accent), #b6f7ff); border-radius:999px; transition:width .45s linear}
+    .ctrls-right{display:flex; gap:8px}
+    .btn{padding:10px 14px; background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); border-radius:10px; cursor:pointer}
+    .btn.primary{background:linear-gradient(90deg,var(--accent), #b6f7ff); color:#022; border:none}
+    .toggle{display:inline-flex; align-items:center; gap:8px}
+
+    /* fullscreen */
+    #fullscreenBtn{position:absolute; top:18px; right:18px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.04); color:var(--muted); padding:8px 10px; border-radius:8px; cursor:pointer}
+
+    /* small */
+    @media (max-width:1100px){.wrap{grid-template-columns:1fr} .slide{grid-template-columns:1fr} .visual{order:2}}
+    @media (max-width:720px){body{font-size:14px} .slides{padding:18px} .visual img{height:220px}}
+
+    /* subtle floating molecules */
+    .molecule{position:absolute; width:120px; height:120px; border-radius:50%; opacity:0.06; filter:blur(6px);}
+    .mol-a{top:-30px; left:-40px; background:linear-gradient(90deg,#6be3ff33,#6b9fff33);}
+    .mol-b{bottom:-40px; right:-50px; background:linear-gradient(90deg,#6bffb533,#a88cff33);}
+
+ /* IMAGE POPUP (Instagram-style) */
+    .img-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s ease;
+      z-index: 9999;
+    }
+    .img-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .img-overlay img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+      transform: scale(0.8);
+      transition: transform 0.35s ease;
+    }
+    .img-overlay.active img {
+      transform: scale(1);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" role="application" aria-label="Présentation ultrastructure cellule eucaryote">
+    <aside class="sidebar">
+      <div class="logo">Ultrastructure — Cellule Eucaryote</div>
+      <div class="subtitle">Animation • Explications détaillées • Images</div>
+
+      <ol class="toc" id="toc">
+        <li><button data-slide="0" class="active">Introduction</button></li>
+        <li><button data-slide="1">Membrane plasmique</button></li>
+        <li><button data-slide="2">Noyau / ADN / Chromosomes</button></li>
+        <li><button data-slide="3">Mitochondries</button></li>
+        <li><button data-slide="4">Réticulum endoplasmique & Ribosomes</button></li>
+        <li><button data-slide="5">Appareil de Golgi</button></li>
+        <li><button data-slide="6">Centrosome</button></li>
+        <li><button data-slide="7">Résumé & Références</button></li>
+      </ol>
+
+      <div class="meta">Ouvrez en plein écran pour meilleur rendu — placez vos images dans <code>images/</code></div>
+    </aside>
+
+    <main class="slides">
+      <!-- decorative -->
+      <div class="molecule mol-a"></div>
+      <div class="molecule mol-b"></div>
+
+      <!-- Slide 0 -->
+      <section class="slide active" data-index="0">
+        <div class="content">
+          <h1>Ultrastructure de la cellule eucaryote</h1>
+          <p>Les cellules eucaryotes sont caractérisées par une forte compartimentation : organites entourés de membranes, un noyau contenant le matériel génétique et un cytosquelette dynamique. Cette organisation permet une spécialisation des fonctions (synthèse, énergie, tri, signalisation).</p>
+          <p class="fact">Taille typique : 10–100 µm · Observables en microscopie électronique</p>
+        </div>
+        <div class="visual">
+          <img data-src="deb.png" alt="Vue générale d'une cellule eucaryote"/>
+        </div>
+      </section>
+
+      <!-- Membrane -->
+      <section class="slide" data-index="1">
+        <div class="content">
+          <h2>Membrane plasmique</h2>
+          <p>Structure : bicouche lipidique composée de phospholipides, cholestérol et glycolipides; protéines intégrales et périphériques assurent le transport et la communication.</p>
+          <p>Fonctions principales :</p>
+          <ul>
+            <li>Perméabilité sélective (transport passif et actif — canaux, pompes).</li>
+            <li>Signalisation : récepteurs membranaires détectent des hormones et neurotransmetteurs.</li>
+            <li>Adhésion cellulaire et formation de jonctions (desmosomes, jonctions serrées).</li>
+          </ul>
+          <p>Exemple : les protéines transmembranaires (transporteurs) changent de conformation pour déplacer des ions contre leur gradient.</p>
+        </div>
+        <div class="visual">
+          <img data-src="membrane.jpg" alt="Membrane plasmique"/>
+        </div>
+      </section>
+
+      <!-- Nucleus -->
+      <section class="slide" data-index="2">
+        <div class="content">
+          <h2>Noyau, ADN et Chromosomes</h2>
+          <p>Le noyau est séparé du cytoplasme par une enveloppe nucléaire double, percée de pores nucléaires permettant le trafic d'ARN et de protéines. Dans le noyau, l'ADN s'organise en chromatine (ADN + histones) et se condense en chromosomes pendant la mitose.</p>
+          <ul>
+            <li>Nucléole : assemblage des sous-unités ribosomales.</li>
+            <li>Réplication : l'ADN est dupliqué lors de la phase S du cycle cellulaire.</li>
+            <li>Transcription : l'ARN polymérase synthétise l'ARNm qui sort par les pores nucléaires.</li>
+          </ul>
+          <p>Les chromosomes portent l'information génétique; leur structure (télomères, centromère) joue un rôle clé dans la stabilité génomique et la ségrégation lors de la division cellulaire.</p>
+        </div>
+        <div class="visual">
+          <img data-src="noyau.png" alt="Noyau ADN chromosomes"/>
+        </div>
+      </section>
+
+      <!-- Mito -->
+      <section class="slide" data-index="3">
+        <div class="content">
+          <h2>Mitochondries</h2>
+          <p>Organites à double membrane. La membrane interne forme des crêtes (cristae) qui augmentent la surface pour la chaîne respiratoire. La matrice contient des enzymes du cycle de Krebs et un petit génome mitochondrial.</p>
+          <ul>
+            <li>Production d'ATP par phosphorylation oxydative (ATP synthase sur les crêtes).</li>
+            <li>Rôle dans l'homéostasie du calcium et l'apoptose (libération du cytochrome c).</li>
+            <li>Origine endosymbiotique : ADN mitochondrial et ribosomes de type bactérien.</li>
+          </ul>
+          <p>Importance : cellules à forte demande énergétique (cellules musculaires, neurones) contiennent de nombreuses mitochondries actives.</p>
+        </div>
+        <div class="visual">
+          <img data-src="metocondry.jpg" alt="Mitochondrie"/>
+        </div>
+      </section>
+
+      <!-- RE & Ribosomes -->
+      <section class="slide" data-index="4">
+        <div class="content">
+          <h2>Réticulum endoplasmique & Ribosomes</h2>
+          <p>Le RE rugueux (RER) porte des ribosomes attachés — lieu de synthèse des protéines sécrétées ou membranaires. Le RE lisse (REL) synthétise lipides, métabolise les glucides et participe à la détoxification.</p>
+          <ul>
+            <li>Ribosomes libres : synthèse de protéines cytosoliques.</li>
+            <li>Ribosomes liés au RER : co-traduction et insertion dans la membrane ou sécrétion.</li>
+            <li>Translocation : les protéines naissantes entrent dans la lumière du RE pour repliement et modifications initiales.</li>
+          </ul>
+          <p>Le RE agit en réseau continu avec l'enveloppe nucléaire, facilitant le flux d'informations et de protéines entre noyau et cytoplasme.</p>
+        </div>
+        <div class="visual">
+          <img data-src="robosome.jpg" alt="RE et ribosomes"/>
+        </div>
+      </section>
+
+      <!-- Golgi -->
+      <section class="slide" data-index="5">
+        <div class="content">
+          <h2>Appareil de Golgi</h2>
+          <p>Composé de saccules empilés (cis, médian, trans) — chaque face a des fonctions distinctes : réception, modification et exportation des protéines et lipides. Le Golgi réalise la glycosylation, le tri, la concentration et forme des vésicules (lysosomes, sécrétion).</p>
+          <ul>
+            <li>Glycosylation : ajout de chaînes glucidiques importantes pour la reconnaissance cellulaire.</li>
+            <li>Tri : adressage vers membranes plasmique, lysosomes ou sécrétion extracellulaire.</li>
+            <li>Participe à la formation de lysosomes et de la membrane plasmique renouvelée.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <img data-src="appareildegolgi.jpg" alt="Appareil de Golgi"/>
+        </div>
+      </section>
+
+      <!-- Centrosome -->
+      <section class="slide" data-index="6">
+        <div class="content">
+          <h2>Centrosome</h2>
+          <p>Le centrosome (deux centrioles perpendiculaires entourés de matrice péricentriolaire) est le principal centre organisateur des microtubules (MTOC) chez les cellules animales. Il joue un rôle crucial dans la formation du fuseau mitotique et l'organisation spatiale du cytosquelette.</p>
+          <ul>
+            <li>Assemblage et polarité des microtubules.</li>
+            <li>Positionnement des organites et transport vésiculaire.</li>
+            <li>Rôle critique dans la mitose et la méiose.</li>
+          </ul>
+        </div>
+        <div class="visual">
+          <img data-src="centrosome.jpg" alt="Centrosome"/>
+        </div>
+      </section>
+
+      <!-- Résumé -->
+      <section class="slide" data-index="7">
+        <div class="content">
+          <h2>Résumé & Références</h2>
+          <p>Points clés : la cellule eucaryote fonctionne grâce à une division du travail entre organites. La membrane compartimente, le noyau stocke et exprime l'information, les mitochondries fournissent l'énergie, le RE/Golgi traitent les molécules, et le centrosome organise la structure.</p>
+          <p style="color:var(--muted); font-size:13px">Références suggérées : Alberts et coll., "Molecular Biology of the Cell"; articles de revue sur la biogenèse mitochondriale et la dynamique du RE.</p>
+          <a href="quizsc.html" class="btn primary" style="margin-top:20px; display:inline-block; text-decoration:none; font-weight:600;">
+  🎯 Faire le quiz
+</a>
+
+        </div>
+        <div class="visual">
+          <img data-src="fin.jpg" alt="Résumé"/>
+        </div>
+      </section>
+
+      <!-- CONTROLS -->
+      <div class="controls" role="group" aria-label="contrôles">
+        <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+        <div class="ctrls-right">
+          <div class="toggle">
+            <label style="font-size:13px;color:var(--muted);">Auto-play</label>
+            <button id="autoplayToggle" class="btn">Off</button>
+          </div>
+          <button id="prev" class="btn">◀ Précédent</button>
+          <button id="next" class="btn primary">Suivant ▶</button>
+        </div>
+      </div>
+
+      <button id="fullscreenBtn">⛶ Plein écran</button>
+    </main>
+  </div>
+        <div class="img-overlay" id="imgOverlay">
+  <img src="" alt="Agrandissement" />
+</div>
+  <script>
+    // Slides logic
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const tocBtns = Array.from(document.querySelectorAll('#toc button'));
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const autoplayBtn = document.getElementById('autoplayToggle');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    let idx = 0;
+    let autoplay = false;
+    let autoplayInterval = null;
+
+    function updateProgress(){
+      const pct = Math.round((idx/(slides.length-1))*100);
+      progressBar.style.width = pct + '%';
+    }
+
+    function show(i){
+      if(i<0) i=0; if(i>slides.length-1) i=slides.length-1; idx = i;
+      slides.forEach(s=>s.classList.remove('active'));
+      tocBtns.forEach(b=>b.classList.remove('active'));
+      slides[idx].classList.add('active');
+      tocBtns[idx].classList.add('active');
+      updateProgress();
+      // lazy show image animation
+      const img = slides[idx].querySelector('img');
+      if(img){
+        img.classList.remove('show');
+        setTimeout(()=>{
+          // if data-src present and not loaded -> set
+          if(img.dataset.src && !img.src.includes(img.dataset.src)) img.src = img.dataset.src;
+          img.classList.add('show');
+        },160);
+      }
+    }
+
+    tocBtns.forEach(b=>b.addEventListener('click', ()=> show(Number(b.dataset.slide))));
+    nextBtn.addEventListener('click', ()=> show((idx+1)%slides.length));
+    prevBtn.addEventListener('click', ()=> show((idx-1+slides.length)%slides.length));
+
+    // keyboard
+    window.addEventListener('keydown', e=>{
+      if(e.key === 'ArrowRight') show((idx+1)%slides.length);
+      if(e.key === 'ArrowLeft') show((idx-1+slides.length)%slides.length);
+      if(e.key === 'f' || e.key === 'F') toggleFullscreen();
+    });
+
+    // autoplay
+    function startAutoplay(){
+      autoplay = true; autoplayBtn.textContent = 'On';
+      autoplayInterval = setInterval(()=>{ show((idx+1)%slides.length); }, 30000);
+    }
+    function stopAutoplay(){
+      autoplay = false; autoplayBtn.textContent = 'Off';
+      clearInterval(autoplayInterval);
+    }
+    autoplayBtn.addEventListener('click', ()=>{ if(!autoplay) startAutoplay(); else stopAutoplay(); });
+
+    // fullscreen
+    function toggleFullscreen(){
+      if(!document.fullscreenElement){ document.documentElement.requestFullscreen(); }
+      else { document.exitFullscreen(); }
+    }
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    // lazy load first image
+    document.addEventListener('DOMContentLoaded', ()=>{
+      slides.forEach((s, i)=>{
+        const img = s.querySelector('img');
+        if(i===0 && img && img.dataset.src) img.src = img.dataset.src;
+      });
+      show(0);
+    });
+
+    // Responsive touch swipe
+    let startX = 0; let startTime = 0;
+    document.addEventListener('touchstart', e=>{ startX = e.touches[0].clientX; startTime = Date.now(); });
+    document.addEventListener('touchend', e=>{ const dx = e.changedTouches[0].clientX - startX; const dt = Date.now() - startTime; if(Math.abs(dx)>50 && dt<500){ if(dx<0) show((idx+1)%slides.length); else show((idx-1+slides.length)%slides.length); } startX=0; startTime=0; });
+    // --- IMAGE ZOOM EFFECT ---
+    const overlay = document.getElementById('imgOverlay');
+    const overlayImg = overlay.querySelector('img');
+
+    document.querySelectorAll('.visual img').forEach(img=>{
+      img.addEventListener('click', ()=>{
+        overlayImg.src = img.src || img.dataset.src;
+        overlay.classList.add('active');
+      });
+    });
+
+    // Close on click outside or ESC
+    overlay.addEventListener('click', e=>{
+      if(e.target === overlay || e.target === overlayImg){
+        overlay.classList.remove('active');
+      }
+    });
+    window.addEventListener('keydown', e=>{
+      if(e.key === "Escape") overlay.classList.remove('active');
+    });
+  </script>
+</body>
+</html>
